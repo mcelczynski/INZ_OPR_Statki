@@ -38,6 +38,9 @@ public class main {
                 case 4:
                     //jakiś kod
                     break;
+                case 6:
+                    Funkcje.generuj_statki();
+                    break;
             }
         }
         System.out.println("Konczymy na dzisiaj. Dziekuje! ");

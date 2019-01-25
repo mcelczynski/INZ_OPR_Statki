@@ -1,6 +1,7 @@
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Funkcje {
@@ -12,7 +13,7 @@ public class Funkcje {
             //Scanner odczyt = new Scanner(System.in); //obiekt do odebrania danych od użytkownika
             //akcja = odczyt.nextInt();
             akcja = czytaj_int();
-            if (akcja >= 1 && akcja <= 5) {
+            if (akcja >= 1 && akcja <= 6) {
                 System.out.println("Wybrales opcje: " + akcja);
                 status = 1;
             }
@@ -32,7 +33,7 @@ public class Funkcje {
 
         FileWriter file = new FileWriter(localDate1 + "  logs.txt", true);
         BufferedWriter out = new BufferedWriter(file);
-        out.write("\n" + localTime1 + "   " + text);
+        out.write(  localTime1 + "   " + text + "\n");
         out.close();
     }
 
@@ -77,4 +78,34 @@ public class Funkcje {
         } else{ status = 0; }
     return status;
     }
+
+    public static void generuj_statki ()  throws IOException {
+        System.out.println("Podaj ilosc statkow do wygenerowania:");
+        int ilosc = czytaj_int();
+        String namefile;
+        String statek;
+        System.out.println("Podaj ilosc statkow do wygenerowania:");
+        namefile = czytaj_string();
+
+        for (int i = 0;i < ilosc;i++) {
+            String ID_prefix = "ID0000";
+            String ID = ID_prefix + Integer.toString(i+10);
+            int w = losowy_int(50, 100);
+            int h = losowy_int(50, 100);
+            int d = losowy_int(50, 100);
+            int status = 0;
+            statek = ID + ";" + Integer.toString(w) + ";" + Integer.toString(h) + ";" + Integer.toString(d) + ";" + Integer.toString(status);
+            FileWriter file = new FileWriter(namefile, true);
+            BufferedWriter out = new BufferedWriter(file);
+            out.write("\n" + statek );
+            out.close();
+            System.out.println(statek);
+        }
+    }
+    public static int losowy_int (int x, int y){
+        Random rand = new Random();
+        int a = rand.nextInt(y - x + 1) + x;
+        return a;
+    }
+
 }
