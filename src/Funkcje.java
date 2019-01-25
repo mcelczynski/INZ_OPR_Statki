@@ -49,18 +49,32 @@ public class Funkcje {
         return string;
     }
     public static int ID_sprawdzanie(String ID) throws IOException {
-
+            // Ladowanie pliku
+            File file = null;
             int status = 0;
-            File file = new File("statki.csv");
-            FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line = "";
-            while((line = bufferedReader.readLine()) != null) {
-                if(line.contains(ID))
+            file = new File("statki.csv");
+            Scanner in = new Scanner(file);
+           // Szukanie w pliku
+        try {
+            in = new Scanner(file).useDelimiter(";");
+
+            while (in.hasNext()) {
+                final String lineFromFile = in.nextLine();
+                if (lineFromFile.contains(ID)) {
+                    // Znalazlem
                     status = 1;
-                else
-                    status = 0;
-        }
+                    break;
+                }
+            }
+        } catch (IOException e){}
+        //wynik szukania
+        return status;
+    }
+    public static int wymiary_sprawdzanie (int a, int b, int c)  throws IOException {
+        int status = 0;
+        if (a <= c && c <= b){
+            status = 1;
+        } else{ status = 0; }
     return status;
     }
 }

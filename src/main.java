@@ -23,7 +23,8 @@ public class main {
             switch( akcja )
             {
                 case 1:
-                    Statki.Dodaj_statek();
+                    String statek = Statki.Dodaj_statek();
+                    System.out.println(statek);
                     break;
 
                 case 2:
@@ -36,14 +37,6 @@ public class main {
                     break;
                 case 4:
                     //jakiś kod
-                    break;
-
-                //...
-                case 5:
-                    //jakiś kod
-                    break;
-                default:
-
                     break;
             }
         }
