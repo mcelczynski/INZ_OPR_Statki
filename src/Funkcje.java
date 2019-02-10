@@ -1,8 +1,11 @@
 import java.io.*;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Random;
 import java.util.Scanner;
+
+import static java.nio.file.Paths.get;
 
 public class Funkcje {
 
@@ -140,4 +143,52 @@ public class Funkcje {
         }
     }
 
+    //Zliczanie linii pliku
+    public static int ilosc_lini (String a)  throws IOException {
+        int lineCount = (int) Files.lines(get(a)).count();
+        return lineCount;
+    }
+
+    //Wczytywanie pliku z kontenerami
+    public static String czytaj_kontenery(){
+        int status =0;
+        String plik_kontenery = null;
+        while(status == 0) {
+            System.out.println("Podaj nazwe pliku z kontenerami: ");
+            plik_kontenery = Funkcje.czytaj_string();
+
+            boolean i = new File(plik_kontenery).isFile();
+            if (i == false){
+                System.out.println("Plik o podanej nazwie nie istnieje - pamiętaj o rozszerzeniu pliku!");
+                continue;}
+            else
+            {
+                System.out.println("Znaleziono plik");
+                break;
+            }
+        }
+        return plik_kontenery;
+    }
+
+    //Wczytywanie pliku ze statkami
+    public static String czytaj_statki(){
+        int status =0;
+        String baza_statki = null;
+        while(status == 0) {
+            System.out.println("Podaj nazwe bazy statkow: ");
+            baza_statki = Funkcje.czytaj_string();
+            String plik_statki = (baza_statki + ".csv");
+            boolean i = new File(plik_statki).isFile();
+            if (i == false){
+                System.out.println("Baza o podanej nazwie nie istnieje - podaj poprawna nazwe bazy!");
+                continue;}
+            else
+            {
+                System.out.println("Znaleziono plik " + plik_statki);
+                break;
+            }
+        }
+
+        return baza_statki;
+    }
 }
