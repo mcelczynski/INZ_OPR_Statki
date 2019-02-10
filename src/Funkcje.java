@@ -13,7 +13,7 @@ public class Funkcje {
             //Scanner odczyt = new Scanner(System.in); //obiekt do odebrania danych od użytkownika
             //akcja = odczyt.nextInt();
             akcja = czytaj_int();
-            if (akcja >= 1 && akcja <= 6) {
+            if (akcja >= 1 && akcja <= 7) {
                 System.out.println("Wybrales opcje: " + akcja);
                 status = 1;
             }
@@ -106,6 +106,38 @@ public class Funkcje {
         Random rand = new Random();
         int a = rand.nextInt(y - x + 1) + x;
         return a;
+    }
+
+    public static double losowy_double (float x, float y) {
+        Random rand = new Random();
+        double a = rand.nextDouble()*(y - x + 1) + x;
+        double round_a =  Math.round(a * 100.0) / 100.0;  // Zaokraglanie do 2 miejsc po przecinku
+        return round_a;
+    }
+    public static void generuj_kontenery ()  throws IOException {
+        System.out.println("Podaj ilosc kontenerow do wygenerowania:");
+        int ilosc = czytaj_int();
+        String namefile;
+        String kontener;
+        System.out.println("Podaj nazwe pliku w ktorym mam zapisać kontenery (rozszerzenie zostanie dodane automatycznie):");
+        namefile = String.format(czytaj_string() + ".csv");
+
+        for (int i = 0;i < ilosc;i++) {
+            String ID_prefix = "KON0000";
+            String ID = ID_prefix + Integer.toString(i+10);
+            int w = losowy_int(50, 100);
+            int h = losowy_int(50, 100);
+            int d = losowy_int(50, 100);
+            double wartosc = losowy_double(100, 1000);
+            kontener = ID + ";" + Integer.toString(w) + ";" + Integer.toString(h) + ";" + Integer.toString(d) + ";" + Double.toString(wartosc);
+            FileWriter file = new FileWriter(namefile, true);
+            BufferedWriter out = new BufferedWriter(file);
+            out.write("\n" + kontener );
+            out.close();
+            System.out.println(kontener);
+            System.out.println("Dane zapisane do pliku " + namefile);
+            Funkcje.loguj("Dodano kontener: " + kontener + " do pliku: " + namefile);
+        }
     }
 
 }

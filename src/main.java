@@ -41,6 +41,9 @@ public class main {
                 case 6:
                     Funkcje.generuj_statki();
                     break;
+                case 7:
+                    Funkcje.generuj_kontenery();
+                    break;
             }
         }
         System.out.println("Konczymy na dzisiaj. Dziekuje! ");
