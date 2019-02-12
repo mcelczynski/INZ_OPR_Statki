@@ -87,7 +87,7 @@ public class Funkcje {
         int ilosc = czytaj_int();
         String namefile;
         String statek;
-        System.out.println("Podaj ilosc statkow do wygenerowania:");
+        System.out.println("Podaj nazwe bazy statkow:");
         namefile = czytaj_string();
 
         for (int i = 0;i < ilosc;i++) {
@@ -100,7 +100,7 @@ public class Funkcje {
             statek = ID + ";" + Integer.toString(w) + ";" + Integer.toString(h) + ";" + Integer.toString(d) + ";" + Integer.toString(status);
             FileWriter file = new FileWriter(namefile, true);
             BufferedWriter out = new BufferedWriter(file);
-            out.write("\n" + statek );
+            out.write(statek + "\n");
             out.close();
             System.out.println(statek);
         }
@@ -135,12 +135,13 @@ public class Funkcje {
             kontener = ID + ";" + Integer.toString(w) + ";" + Integer.toString(h) + ";" + Integer.toString(d) + ";" + Double.toString(wartosc);
             FileWriter file = new FileWriter(namefile, true);
             BufferedWriter out = new BufferedWriter(file);
-            out.write("\n" + kontener );
+            out.write(kontener + "\n");
             out.close();
             System.out.println(kontener);
-            System.out.println("Dane zapisane do pliku " + namefile);
+
             Funkcje.loguj("Dodano kontener: " + kontener + " do pliku: " + namefile);
         }
+        System.out.println("Dane zapisane do pliku " + namefile);
     }
 
     //Zliczanie linii pliku
@@ -190,5 +191,61 @@ public class Funkcje {
         }
 
         return baza_statki;
+    }
+
+    // Wczytywanie danych z csv do tabeli
+    public static String[][] czytaj_z_csv(String filename) throws IOException {
+        String string = "004-034556-12345-558-258";
+
+        //czytanie lini z pliku
+        File file = new File(filename);
+        FileReader fr = new FileReader(file);
+        BufferedReader br = new BufferedReader(fr);
+        String line;
+        int z=0;
+        int i=ilosc_lini(filename);
+        int j=5;
+        String [][] tabela = new String[i][j];
+        //String[] parts = new String[0];
+
+            while ((line = br.readLine()) != null) {
+                System.out.println(z);
+                String[] parts = line.split(";");
+                System.out.println(parts[0]);
+                System.out.println(parts[2]);
+                for (int x = 0; x < j; x++) {
+                    tabela[z][x] = parts[x];
+                    System.out.println(tabela[z][x]);
+                }
+                z++;
+            }
+
+        System.out.println("Wyswietlamy nasza tabele xD");
+
+
+           /* for (z=0; z < i;z++) {
+               System.out.println(z);
+            for (int x = 0; x < j; x++) {
+                String[] temp;
+                temp[x] = tabela[z][x];
+            }
+            System.out.println(te);
+        }
+        */
+
+        System.out.println("test");
+
+       /*
+        System.out.println(string);
+        String[] parts = string.split("-");
+        String part1 = parts[0]; // 004
+        String part2 = parts[1]; // 034556
+        String part3 = parts[2];
+        String part4 = parts[3];
+        String part5 = parts[4];
+        //String part6 = parts[5];
+        System.out.println("Podzielono na: \n" + part1 + "\n" + part2 + "\n"+ part3 + "\n"+ part4 + "\n"+ part5 + "\n");
+        */
+        return tabela;
     }
 }
