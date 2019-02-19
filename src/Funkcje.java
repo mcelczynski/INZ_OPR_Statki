@@ -96,8 +96,9 @@ public class Funkcje {
             int w = losowy_int(50, 100);
             int h = losowy_int(50, 100);
             int d = losowy_int(50, 100);
+            int v = w*h*d/1000;
             int status = 0;
-            statek = ID + ";" + Integer.toString(w) + ";" + Integer.toString(h) + ";" + Integer.toString(d) + ";" + Integer.toString(status);
+            statek = ID + ";" + Integer.toString(w) + ";" + Integer.toString(h) + ";" + Integer.toString(d) + ";" + Integer.toString(v) + ";" + Integer.toString(status);
             FileWriter file = new FileWriter(namefile, true);
             BufferedWriter out = new BufferedWriter(file);
             out.write(statek + "\n");

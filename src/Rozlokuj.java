@@ -14,7 +14,9 @@ public class Rozlokuj {
         int ilosc_lini = Funkcje.ilosc_lini(plik_kontenery)-1;
         System.out.println("Rozpoczynam rozlokowywanie " + ilosc_lini + " kontenerow na statki z bazy " + baza_statki);
         String [][] kontenery = Funkcje.czytaj_z_csv(plik_kontenery);
+        String [][] statki = Funkcje.czytaj_z_csv(plik_statki);
         System.out.println(Arrays.deepToString(kontenery));
+        System.out.println(Arrays.deepToString(statki));
         Arrays.sort(kontenery, new Comparator<String[]>() {
             @Override
             public int compare(String[] a, String[] b) {
@@ -35,18 +37,18 @@ public class Rozlokuj {
         for(int i=0; i<kontenery.length; i++) {
 
             kontenery[i] = Arrays.copyOf(kontenery[i], kontenery.length + 3);
-            kontenery[i][5] = Float.toString((Float.parseFloat(kontenery[i][1]) * Float.parseFloat(kontenery[i][2]) * Float.parseFloat(kontenery[i][3])));
-            kontenery[i][6] = Float.toString((Float.parseFloat(kontenery[i][4])/Float.parseFloat(kontenery[i][5])*1000));
+            kontenery[i][5] = Float.toString((Float.parseFloat(kontenery[i][1]) * Float.parseFloat(kontenery[i][2]) * Float.parseFloat(kontenery[i][3]))/1000);
+            kontenery[i][6] = Float.toString((Float.parseFloat(kontenery[i][4])/Float.parseFloat(kontenery[i][5])));
             //kontenery[i][7] = "0";
             //Kolumna [i][7] bedzie zawierać ID statku na ktory zostala załadowana, jesli jest null to kontener nadal nie zostal zaladowany
 
         }
         System.out.println("Rozszerzona tabela: \n" + Arrays.deepToString(kontenery));
-        System.out.println("Jaki algorytm rozlokowania chcesz użyć?\n [1]Zachlanny\n [2]Rozmiar/Cena"\n)
+        System.out.println("Jaki algorytm rozlokowania chcesz użyć?\n [1]Zachlanny\n [2]Sprytny (Rozmiar/Cena)\n");
                 int algorytm =Funkcje.czytaj_int();
         switch (algorytm) {
             case 1:
-                String [][] raport = algorytm_zachlanny();
+                String [][] raport = algorytm_zachlanny(kontenery, statki);
                 System.out.println("Raport z rozlokowywania: \n" + Arrays.deepToString(raport));
         }
        // System.out.println("Tymczasowa tabela recznie: \n" + tmp[0][0] + tmp[0][4]);
@@ -60,17 +62,33 @@ public class Rozlokuj {
 
     return ("Skonczylem rozlokowanie");
     }
-    public static String[][] algorytm_zachlanny(String [][] kontenery) throws IOException {
-        Arrays.sort(kontenery, new Comparator<String[]>() {
+    public static String[][] algorytm_zachlanny(String [][] kontenery1, String [][] statki1) throws IOException {
+
+        //Sortowanie kontenerów po wartości
+        Arrays.sort(kontenery1, new Comparator<String[]>() {
+            @Override
+            public int compare(String[] a, String[] b) {
+                return Double.compare(Double.parseDouble(a[5]), Double.parseDouble(b[5]));
+            }
+        });
+        System.out.println("Po sortowaniu w zachlonnym: \n" + Arrays.deepToString(kontenery1));
+        double suma_ladunku = 0;
+        for(int i=0; i<kontenery1.length; i++){
+            suma_ladunku += Double.parseDouble(kontenery1[i][5]);
+        }
+        System.out.println("suma ladunku: " + suma_ladunku);
+
+        //Sortowanie statkow po pojemnosci
+        Arrays.sort(statki1, new Comparator<String[]>() {
             @Override
             public int compare(String[] a, String[] b) {
                 return Double.compare(Double.parseDouble(a[4]), Double.parseDouble(b[4]));
             }
         });
+        System.out.println("Po sortowaniu w statkow: \n" + Arrays.deepToString(statki1));
 
-
-
-
-
+        return kontenery1;
     }
+
+
 }
