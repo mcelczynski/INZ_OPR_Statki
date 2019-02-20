@@ -41,15 +41,17 @@ public class Rozlokuj {
             case 1:
                 String [][] raport = algorytm_zachlanny(kontenery, statki);
                 System.out.println("Raport z rozlokowywania: \n" + Arrays.deepToString(raport));
-        }
-       // System.out.println("Tymczasowa tabela recznie: \n" + tmp[0][0] + tmp[0][4]);
+                Raporty.generuj_raport(raport);
+            case 2:
+                String [][] raport2 = algorytm_sprytny(kontenery, statki);
+                System.out.println("Raport z rozlokowywania: \n" + Arrays.deepToString(raport2));
+                Raporty.generuj_raport(raport2);
 
 
-        /*    for(int y=0; y< kontenery[x].length; y++)
-                System.out.print(kontenery[x][y] + "    ");
-            System.out.println();
+            default: System.out.println("UWAGA!!!\nNiestety wybrany algorytm nie istnieje!\n Sprobujmy raz jeszcze\n!!!UWAGA\n");
         }
-*/
+
+
 
     return ("Skonczylem rozlokowanie");
     }
@@ -60,9 +62,9 @@ public class Rozlokuj {
         //Dodawanie kolumn do tabeli z kontenerami + kalkulowanie pojemnosci
         for(int i=0; i<kontenery.length; i++) {
 
-            kontenery[i] = Arrays.copyOf(kontenery[i], kontenery.length + 3);
-            kontenery[i][5] = Float.toString((Float.parseFloat(kontenery[i][1]) * Float.parseFloat(kontenery[i][2]) * Float.parseFloat(kontenery[i][3]))/1000);
-            kontenery[i][6] = Float.toString((Float.parseFloat(kontenery[i][4])/Float.parseFloat(kontenery[i][5])));
+            kontenery[i] = Arrays.copyOf(kontenery[i], kontenery[i].length + 3);
+            kontenery[i][5] = Double.toString((Double.parseDouble(kontenery[i][1]) * Double.parseDouble(kontenery[i][2]) * Double.parseDouble(kontenery[i][3])));
+            kontenery[i][6] = Double.toString((Double.parseDouble(kontenery[i][4])/Double.parseDouble(kontenery[i][5]))*1.00);
             //kontenery[i][7] = "0";
             //Kolumna [i][7] bedzie zawierać ID statku na ktory zostala załadowana, jesli jest null to kontener nadal nie zostal zaladowany
 
@@ -73,7 +75,7 @@ public class Rozlokuj {
         Arrays.sort(kontenery, new Comparator<String[]>() {
             @Override
             public int compare(String[] a, String[] b) {
-                return Double.compare(Double.parseDouble(a[5]), Double.parseDouble(b[5]));
+                return Double.compare(Double.parseDouble(b[4]), Double.parseDouble(a[4]));
             }
         });
         System.out.println("Po sortowaniu w zachlonnym: \n" + Arrays.deepToString(kontenery));
@@ -90,9 +92,10 @@ public class Rozlokuj {
         //Dodawanie kolumn do tabeli ze statkami + kalkulowanie pojemnosci
         for(int i=0; i<statki.length; i++) {
 
-            statki[i] = Arrays.copyOf(statki[i], statki.length + 2);
-            statki[i][4] = Float.toString((Float.parseFloat(statki[i][1]) * Float.parseFloat(statki[i][2]) * Float.parseFloat(statki[i][3]))/100);
+            statki[i] = Arrays.copyOf(statki[i], statki[i].length + 3);
+            statki[i][4] = Float.toString((Float.parseFloat(statki[i][1]) * Float.parseFloat(statki[i][2]) * Float.parseFloat(statki[i][3])));
             statki[i][5]=Double.toString(0);
+            statki[i][6]="0";
             //Kolumna [i][5] bedzie zawierac informacje jaka ilosc/ladunek kontenerow zostal juz zaladowany na statek
            //Kolumna [i][6] bedzie zawierać status statku - czy jest on zajety/zaladowany czy nie
         }
@@ -106,67 +109,185 @@ public class Rozlokuj {
                 return Double.compare(Double.parseDouble(a[4]), Double.parseDouble(b[4]));
             }
         });
-        System.out.println("Po sortowaniu w statkow: \n" + Arrays.deepToString(statki));
+        System.out.println("Po sortowaniu statkow: \n" + Arrays.deepToString(statki));
 
-        while(suma_ladunku>0 && status_ladowania==0) {
+        //Ladowanie
+        while(suma_ladunku>Double.parseDouble("0")){
             int x = 0;
             int y = 0;
             //Wybieranie statku do zaladowania
             for (int i = 0; i < statki.length; i++) {
-                if(statki[i][6]==null) {
-                    if ((Double.parseDouble(statki[i][4]) >= suma_ladunku)) {
+                if(statki[i][6]=="0") {
+                    if ((Double.parseDouble(statki[i][4]) - (Double.parseDouble(statki[i][5]))) >= suma_ladunku) {
                         x = i;
                         y = 4;
-                        System.out.println("sprawdzam x, y" + x + "  " + y);
-                    } else break;
+                        //System.out.println("sprawdzam x, y: " + x + ",  " + y);
+                        break;
+                    } else continue;
                 }
             }
             if (y == 0) {
                 for(int i=0;i<statki.length;i++){
-                    if((statki[i][6])==null){
+                    if((statki[i][6])!="1"){
                         x=i;
                         y=4;
-                        System.out.println("sprawdzam drugi raz x, y" + x +"  " + y);
+                        //System.out.println("sprawdzam drugi raz x, y" + x +"  " + y);
+                        break;
                     }
                     else{
-                        System.out.println("Nie ma juz dostepnych statkow, niektore kontenery nie zostaly zaladowane, sprawdz raport");
-                        status_ladowania=2;
-                        break;
+                         continue;
                     }
                 }
             }
             //Ladujemy kontenery na statek
-            System.out.println("sprawdzam 3");
-            for(int i=0;i<kontenery.length;i++){
+             for(int i=0;i<kontenery.length;i++){
                 if(kontenery[i][7]==null){
                    kontenery[i][7]=statki[x][0];
-                   suma_ladunku -= Double.parseDouble(kontenery[i][5]);
+                   suma_ladunku = (suma_ladunku - Double.parseDouble(kontenery[i][5]));
+                   //System.out.println("Teraz suma ladunku wynosi: " + suma_ladunku);
                    statki[x][5] = Double.toString(Double.parseDouble(statki[x][5]) + Double.parseDouble(kontenery[i][5]));
-                   if(Double.parseDouble(kontenery[i+1][5]) > (Double.parseDouble(statki[x][4]) - Double.parseDouble(statki[x][5]))){
-                       statki[x][6]="1";
-                   }
-                   else {
-                       System.out.println("sprawdzam 4");
-                       break;
+
+                   if(i+1<kontenery.length) {
+                       if (Double.parseDouble(kontenery[i + 1][5]) > (Double.parseDouble(statki[x][4]) - Double.parseDouble(statki[x][5]))) {
+                           statki[x][6] = "1";
+                           break;
+                       } else {
+                           continue;
+                       }
                    }
 
                 }
-                else break;
-                System.out.println("sprawdzam 5");
+                else {
 
+                    continue;
+                }
             }
-            if(kontenery[kontenery.length-1][7]!=null){status_ladowania=1;}
-            System.out.println("sprawdzam 6" + status_ladowania);
+            if(kontenery[kontenery.length-1][7]!=null){break;}
             System.out.println("kontenery: \n" + Arrays.deepToString(kontenery));
 
 
 
         }
 
-        System.out.println("status ladowania: " + status_ladowania + "\nSuma ladunku: " + suma_ladunku);
         System.out.println("Statki: \n" + Arrays.deepToString(statki));
         return kontenery;
     }
+    public static String[][] algorytm_sprytny(String [][] kontenery, String [][] statki) throws IOException {
 
+        int status_ladowania=0;
+        //Przygotowanie tabeli kontenerow
+        //Dodawanie kolumn do tabeli z kontenerami + kalkulowanie pojemnosci
+        for(int i=0; i<kontenery.length; i++) {
+
+            kontenery[i] = Arrays.copyOf(kontenery[i], kontenery[i].length + 3);
+            kontenery[i][5] = Double.toString((Double.parseDouble(kontenery[i][1]) * Double.parseDouble(kontenery[i][2]) * Double.parseDouble(kontenery[i][3])));
+            kontenery[i][6] = Double.toString((Double.parseDouble(kontenery[i][4])/Double.parseDouble(kontenery[i][5]))*1.00);
+            //kontenery[i][7] = "0";
+            //Kolumna [i][7] bedzie zawierać ID statku na ktory zostala załadowana, jesli jest null to kontener nadal nie zostal zaladowany
+
+        }
+        System.out.println("Rozszerzona tabela: \n" + Arrays.deepToString(kontenery));
+
+        //Sortowanie kontenerów po stosunku wartosc/objetosc
+        Arrays.sort(kontenery, new Comparator<String[]>() {
+            @Override
+            public int compare(String[] a, String[] b) {
+                return Double.compare(Double.parseDouble(a[6]), Double.parseDouble(b[6]));
+            }
+        });
+        System.out.println("Po sortowaniu w sprytnym: \n" + Arrays.deepToString(kontenery));
+
+        //Obliczanie lacznego ladunku kontenerow
+        double suma_ladunku = 0;
+        for(int i=0; i<kontenery.length; i++){
+            suma_ladunku += Double.parseDouble(kontenery[i][5]);
+        }
+        System.out.println("suma ladunku: " + suma_ladunku);
+
+
+        //Przygotowanie tabeli statkow
+        //Dodawanie kolumn do tabeli ze statkami + kalkulowanie pojemnosci
+        for(int i=0; i<statki.length; i++) {
+
+            statki[i] = Arrays.copyOf(statki[i], statki[i].length + 3);
+            statki[i][4] = Float.toString((Float.parseFloat(statki[i][1]) * Float.parseFloat(statki[i][2]) * Float.parseFloat(statki[i][3])));
+            statki[i][5]=Double.toString(0);
+            statki[i][6]="0";
+            //Kolumna [i][5] bedzie zawierac informacje jaka ilosc/ladunek kontenerow zostal juz zaladowany na statek
+            //Kolumna [i][6] bedzie zawierać status statku - czy jest on zajety/zaladowany czy nie
+        }
+        System.out.println("Rozszerzona tabela: \n" + Arrays.deepToString(statki));
+
+
+        //Sortowanie statkow po pojemnosci
+        Arrays.sort(statki, new Comparator<String[]>() {
+            @Override
+            public int compare(String[] a, String[] b) {
+                return Double.compare(Double.parseDouble(a[4]), Double.parseDouble(b[4]));
+            }
+        });
+        System.out.println("Po sortowaniu statkow: \n" + Arrays.deepToString(statki));
+
+        //Ladowanie
+        while(suma_ladunku>Double.parseDouble("0")){
+            int x = 0;
+            int y = 0;
+            //Wybieranie statku do zaladowania
+            for (int i = 0; i < statki.length; i++) {
+                if(statki[i][6]=="0") {
+                    if ((Double.parseDouble(statki[i][4]) - (Double.parseDouble(statki[i][5]))) >= suma_ladunku) {
+                        x = i;
+                        y = 4;
+                        //System.out.println("sprawdzam x, y: " + x + ",  " + y);
+                        break;
+                    } else continue;
+                }
+            }
+            if (y == 0) {
+                for(int i=0;i<statki.length;i++){
+                    if((statki[i][6])!="1"){
+                        x=i;
+                        y=4;
+                        //System.out.println("sprawdzam drugi raz x, y" + x +"  " + y);
+                        break;
+                    }
+                    else{
+                        continue;
+                    }
+                }
+            }
+            //Ladujemy kontenery na statek
+            for(int i=0;i<kontenery.length;i++){
+                if(kontenery[i][7]==null){
+                    kontenery[i][7]=statki[x][0];
+                    suma_ladunku = (suma_ladunku - Double.parseDouble(kontenery[i][5]));
+                    //System.out.println("Teraz suma ladunku wynosi: " + suma_ladunku);
+                    statki[x][5] = Double.toString(Double.parseDouble(statki[x][5]) + Double.parseDouble(kontenery[i][5]));
+
+                    if(i+1<kontenery.length) {
+                        if (Double.parseDouble(kontenery[i + 1][5]) > (Double.parseDouble(statki[x][4]) - Double.parseDouble(statki[x][5]))) {
+                            statki[x][6] = "1";
+                            break;
+                        } else {
+                            continue;
+                        }
+                    }
+
+                }
+                else {
+
+                    continue;
+                }
+            }
+            if(kontenery[kontenery.length-1][7]!=null){break;}
+            System.out.println("kontenery: \n" + Arrays.deepToString(kontenery));
+
+
+
+        }
+
+        System.out.println("Statki: \n" + Arrays.deepToString(statki));
+        return kontenery;
+    }
 
 }

@@ -11,11 +11,11 @@ public class main {
 
     public static void main (String[] args) throws IOException, InterruptedException {
         int akcja = 0;
-        while (akcja != 5) {
+        while (akcja != 4) {
             //Wstep
             System.out.println("Witaj w aplikacji do automatycznego rozdzelania kontenerów na statki");
             System.out.println("Powiedz prosze, co chcesz zrobić?\nMasz do wyboru następujące opcje:");
-            System.out.println("[1] Dodaj nowy statek\n[2] Rozlokuj kontenery\n[3] Wyswietl raporty\n[4] Usun statek\n[5]Zakoncz");
+            System.out.println("[1] Dodaj nowy statek\n[2] Rozlokuj kontenery\n[3] Wyswietl raporty\n[4] Zakoncz");
             akcja = Funkcje.menu_opcje();
             System.out.println("Przechodze do akcji: " + akcja);
 
@@ -31,21 +31,21 @@ public class main {
                     Rozlokuj.Rozlokuj_nowy();
                     break;
 
-                //...
+
                 case 3:
-                    System.out.println("Podaj plik z kontenerami:");
+                    System.out.println("Podaj ile dni wstecz chcesz wyswietlić raporty:");
                     String kontenery = Funkcje.czytaj_string();
                     Funkcje.czytaj_z_csv_kontenery(kontenery);
                     break;
                 case 4:
-                    //jakiś kod
                     break;
-                case 6:
+                case 5:
                     Funkcje.generuj_statki();
                     break;
-                case 7:
+                case 6:
                     Funkcje.generuj_kontenery();
                     break;
+                default:System.out.println("!!!\nNietety to zly wybor!");
             }
         }
         System.out.println("Konczymy na dzisiaj. Dziekuje! ");

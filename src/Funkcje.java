@@ -16,7 +16,7 @@ public class Funkcje {
             //Scanner odczyt = new Scanner(System.in); //obiekt do odebrania danych od użytkownika
             //akcja = odczyt.nextInt();
             akcja = czytaj_int();
-            if (akcja >= 1 && akcja <= 7) {
+            if (akcja >= 1 && akcja <= 6) {
                 System.out.println("Wybrales opcje: " + akcja);
                 status = 1;
             }

@@ -28,7 +28,8 @@ public class Statki {
     public static String wczytaj_statek() throws IOException {
         int status_czytaj = 0;
 
-        //Petla dodajaca Statek
+        //Petle dodajaca Statek
+        //ID statku
         while (status_czytaj == 0) {
 
             //ID statku
@@ -47,6 +48,7 @@ public class Statki {
         }
         status_czytaj = 0;
 
+        //Szerokosc statku
         while (status_czytaj == 0){
 
             //Szerokosc statku
@@ -65,7 +67,7 @@ public class Statki {
             status_czytaj=1;
         }
         status_czytaj = 0;
-
+        //Wysokosc statku
         while (status_czytaj == 0){
 
             //Wysokosc statku
@@ -85,6 +87,7 @@ public class Statki {
         }
         status_czytaj = 0;
 
+        //Dlugosc statku
         while (status_czytaj == 0){
 
             //Dlugosc statku
@@ -109,10 +112,7 @@ public class Statki {
 
         return (ID_statku + ";" + w + ";" + h + ";" + d + ";" + v + ";" + Status_Statku + ";");
         }
-       /* String string = "004-034556";
-        String[] parts = string.split("-");
-        String part1 = parts[0]; // 004
-        String part2 = parts[1]; // 034556
-    */
+
+
     }
 
