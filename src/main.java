@@ -35,7 +35,7 @@ public class main {
                 case 3:
                     System.out.println("Podaj plik z kontenerami:");
                     String kontenery = Funkcje.czytaj_string();
-                    Funkcje.czytaj_z_csv(kontenery);
+                    Funkcje.czytaj_z_csv_kontenery(kontenery);
                     break;
                 case 4:
                     //jakiś kod
